@@ -17,5 +17,7 @@ export type Category = {
 
 export type Quiz = {
     topic: string;
+    info: string;
+    logo: string;
     categories: Category[];
 };

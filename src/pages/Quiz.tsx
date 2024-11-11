@@ -110,6 +110,65 @@ const QuizPage: React.FC = () => {
         return score;
     };
 
+    // const saveQuizRecord = async () => {
+    //     // Sample data for API call
+    //     const quizRecordData = {
+    //         userId: "user_id_here", // Replace with actual user ID
+    //         quizId: "quiz_id_here", // Replace with actual quiz ID
+    //         score: calculateScore(),
+    //         totalQuestions: selectedQuiz!.questions.length,
+    //         correctAnswers: calculateCorrectAnswers(),
+    //         incorrectAnswers:
+    //             selectedQuiz!.questions.length - calculateCorrectAnswers(),
+    //         categories: selectedQuiz!.questions.map((question, index) => ({
+    //             questionId: question._id,
+    //             selectedOptions: answers[index] || [],
+    //             isCorrect:
+    //                 answers[index] &&
+    //                 question.answer.every((ans) =>
+    //                     answers[index].includes(ans)
+    //                 ) &&
+    //                 answers[index].length === question.answer.length,
+    //             timeSpent: 15, // replace with actual time spent per question if tracked
+    //         })),
+    //     };
+
+    //     try {
+    //         const response = await axios.post(
+    //             "/api/quiz-record",
+    //             quizRecordData
+    //         );
+    //         console.log("Quiz record saved:", response.data);
+    //     } catch (error) {
+    //         console.error("Error saving quiz record:", error);
+    //     }
+    // };
+
+    // // Helper functions to calculate score, correct answers, and time taken
+    // const calculateCorrectAnswers = (): number => {
+    //     let correct = 0;
+    //     if (selectedQuiz) {
+    //         selectedQuiz.questions.forEach((question, index) => {
+    //             if (
+    //                 answers[index] &&
+    //                 question.answer.every((ans) =>
+    //                     answers[index].includes(ans)
+    //                 ) &&
+    //                 answers[index].length === question.answer.length
+    //             ) {
+    //                 correct++;
+    //             }
+    //         });
+    //     }
+    //     return correct;
+    // };
+
+    // useEffect(() => {
+    //     if (isQuizComplete) {
+    //         saveQuizRecord(); // Call API to save quiz record when quiz is complete
+    //     }
+    // }, [isQuizComplete]);
+
     return (
         <div>
             <QuizHeader lang={lang} />
