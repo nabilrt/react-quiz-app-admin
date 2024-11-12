@@ -6,7 +6,7 @@ const AuthSidebar = () => {
     let location = useLocation();
     const { user, logout } = useAuth();
     return (
-        <aside className="flex flex-col  h-screen px-4 py-8 overflow-y-auto bg-white border-r ">
+        <aside className="flex flex-col  h-screen   px-4 py-8 overflow-y-auto bg-white border-r ">
             <a href="#">
                 <img className="w-auto h-6 sm:h-7" src={loginImage} alt="" />
             </a>

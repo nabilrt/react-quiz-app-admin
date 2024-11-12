@@ -9,6 +9,7 @@ import QuizPage from "./pages/Quiz";
 import ProfilePage from "./pages/Profile";
 import SettingsPage from "./pages/SettingsPage";
 import QuizIndex from "./pages/QuizIndex";
+import UserDashboard from "./pages/Dashboard";
 
 function App() {
     return (
@@ -19,6 +20,7 @@ function App() {
                     <Route path="/register" element={<Register />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/user/*" element={<PrivateOutlet />}>
+                        <Route path="dashboard" element={<UserDashboard />} />
                         <Route path="quiz" element={<QuizIndex />} />
                         <Route path="profile" element={<ProfilePage />} />
                         <Route path="settings" element={<SettingsPage />} />

@@ -134,8 +134,9 @@ const ProfilePage = () => {
                                     <input
                                         type="email"
                                         id="email"
-                                        className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
+                                        className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 read-only:bg-slate-200 read-only:cursor-default"
                                         placeholder="your.email@mail.com"
+                                        readOnly
                                         {...register("email", {
                                             required: true,
                                         })}
@@ -156,9 +157,10 @@ const ProfilePage = () => {
                                     <input
                                         type="text"
                                         id="role"
-                                        className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 uppercase"
+                                        className="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 uppercase read-only:bg-slate-200 read-only:cursor-default"
                                         placeholder="your role"
                                         {...register("role")}
+                                        readOnly
                                     />
                                 </div>
                                 <div className="flex justify-end">

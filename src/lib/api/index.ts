@@ -80,3 +80,12 @@ export const storeQuizRecord = async (record: any) => {
         throw new Error(error.message);
     }
 };
+
+export const getUserAnalytics = async () => {
+    try {
+        const response = await axios.get(`/quiz-record/analytics`);
+        return response;
+    } catch (error: any) {
+        throw new Error(error.message);
+    }
+};

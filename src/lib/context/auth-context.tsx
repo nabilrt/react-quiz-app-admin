@@ -99,7 +99,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
                     "user",
                     JSON.stringify(userData.data.user)
                 );
-                navigate("/user/quiz/Next.js");
+                navigate("/user/dashboard");
                 return null;
             } else {
                 return "Invalid username or password.";
