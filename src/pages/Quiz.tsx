@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { quiz_data } from "../data/data"; // Assume quiz_data is typed as Quiz[]
-import { Quiz, Category } from "../data/types"; // Import types if placed in a separate file
+import { Category } from "../data/types"; // Import types if placed in a separate file
 import OptionCard from "../components/OptionCard";
 import QuizCategorySelection from "../components/QuizCategorySelection";
 import TimerProgress from "../components/TimerProgress";
 import ReturnIcon from "../icons/ReturnIcon";
 import CrossIcon from "../icons/CrossIcon";
 import ScoreSection from "../components/ScoreSection";
-import { getQuizByTopic, storeQuizRecord } from "../lib/api";
+import { getQuizByTopic } from "../lib/api";
 import { useAuth } from "../lib/context/auth-context";
 
 type Params = {
@@ -132,59 +131,6 @@ const QuizPage: React.FC = () => {
         }
         return score;
     };
-
-    const calculateCorrectAnswers = (): number => {
-        let correct = 0;
-        if (selectedQuiz) {
-            selectedQuiz.questions.forEach((question, index) => {
-                if (
-                    answers[index] &&
-                    question.answer.every((ans) =>
-                        answers[index].includes(ans)
-                    ) &&
-                    answers[index].length === question.answer.length
-                ) {
-                    correct++;
-                }
-            });
-        }
-        return correct;
-    };
-
-    const { user } = useAuth();
-
-    const saveQuizRecord = async () => {
-        if (!selectedQuiz) return;
-
-        const quizRecordData = {
-            userId: user?._id, // dynamically populate userId
-            quizId: quizId, // dynamically populate quizId
-            categoryId: selectedQuiz._id,
-            categoryName: selectedQuiz.category,
-            score: calculateScore(),
-            totalQuestions: selectedQuiz.questions.length,
-            correctAnswers: calculateCorrectAnswers(),
-            incorrectAnswers:
-                selectedQuiz.questions.length - calculateCorrectAnswers(),
-            attempts: 1,
-            accuracy:
-                (calculateCorrectAnswers() / selectedQuiz.questions.length) *
-                100,
-        };
-
-        try {
-            const response = await storeQuizRecord(quizRecordData);
-            console.log("Quiz record saved:", response.data);
-        } catch (error) {
-            console.error("Error saving quiz record:", error);
-        }
-    };
-
-    useEffect(() => {
-        if (isQuizComplete) {
-            saveQuizRecord();
-        }
-    }, [isQuizComplete]);
 
     if (loading) {
         return <div className="text-center py-4">Loading...</div>;

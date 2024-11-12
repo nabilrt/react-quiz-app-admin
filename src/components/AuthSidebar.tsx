@@ -8,18 +8,20 @@ const AuthSidebar = () => {
     return (
         <aside className="flex flex-col  h-screen   px-4 py-8 overflow-y-auto bg-white border-r ">
             <a href="#">
-                <img className="w-auto h-6 sm:h-7" src={loginImage} alt="" />
+                <p className="text-center text-xl font-semibold">
+                    QUIZZY ADMIN
+                </p>
             </a>
 
             <div className="flex flex-col justify-between flex-1 mt-6">
                 <nav>
                     <Link
                         className={`flex items-center px-4 py-2 text-gray-600 transition-colors duration-300 transform rounded-md  hover:bg-gray-100  hover:text-gray-700 ${
-                            location.pathname === "/user/dashboard"
+                            location.pathname === "/admin/dashboard"
                                 ? "bg-gray-100"
                                 : ""
                         } rounded-md `}
-                        to="/user/dashboard"
+                        to="/admin/dashboard"
                     >
                         <svg
                             className="w-5 h-5"
@@ -39,11 +41,11 @@ const AuthSidebar = () => {
                     </Link>
                     <Link
                         className={`flex items-center px-4 py-2 mt-5 text-gray-600 transition-colors duration-300 transform rounded-md  hover:bg-gray-100 hover:text-gray-700 ${
-                            location.pathname.startsWith("/user/quiz")
+                            location.pathname.startsWith("/admin/quiz")
                                 ? "bg-gray-100"
                                 : ""
                         }`}
-                        to="/user/quiz"
+                        to="/admin/quiz"
                     >
                         <svg
                             className="w-5 h-5"
@@ -63,11 +65,11 @@ const AuthSidebar = () => {
                     </Link>
                     <Link
                         className={`flex items-center px-4 py-2 text-gray-600 mt-5 transition-colors duration-300 transform rounded-md  hover:bg-gray-100  hover:text-gray-700 ${
-                            location.pathname === "/user/settings"
+                            location.pathname === "/admin/settings"
                                 ? "bg-gray-100"
                                 : ""
                         } rounded-md `}
-                        to="/user/settings"
+                        to="/admin/settings"
                     >
                         <svg
                             className="w-5 h-5"
@@ -95,9 +97,9 @@ const AuthSidebar = () => {
                 </nav>
                 <div className="flex flex-col gap-2">
                     <Link
-                        to="/user/profile"
+                        to="/admin/profile"
                         className={`flex items-center px-4 py-2 -mx-2 transform rounded-md  hover:bg-gray-200 hover:text-gray-700 ${
-                            location.pathname === "/user/profile"
+                            location.pathname === "/admin/profile"
                                 ? "bg-gray-100"
                                 : ""
                         }`}
@@ -108,7 +110,7 @@ const AuthSidebar = () => {
                             alt="avatar"
                         />
                         <span className="mx-2 font-medium text-gray-800 ">
-                            {user?.name}
+                            ADMIN
                         </span>
                     </Link>
                     <button

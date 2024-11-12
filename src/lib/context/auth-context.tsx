@@ -67,24 +67,19 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
                                 JSON.stringify(response.data.user)
                             );
                         } else {
-                            navigate("/login");
+                            navigate("/");
                         }
                     }
                 }
             } catch (error) {
                 setIsAuthenticated(false);
-                navigate("/login");
+                navigate("/");
             } finally {
                 setLoading(false);
             }
         };
         checkLogin();
-    }, [
-        navigate,
-        location.pathname !== "/register" &&
-            location.pathname !== "/login" &&
-            location.pathname !== "/",
-    ]);
+    }, [navigate]);
 
     const userLogin = async (data: any): Promise<string | null> => {
         setLoginLoader(true);
@@ -99,7 +94,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
                     "user",
                     JSON.stringify(userData.data.user)
                 );
-                navigate("/user/dashboard");
+                navigate("/admin/dashboard");
                 return null;
             } else {
                 return "Invalid username or password.";
@@ -116,11 +111,8 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
         setIsAuthenticated(false);
         localStorage.removeItem("token");
         localStorage.removeItem("user");
-        if (location.pathname === "/") {
-            navigate("/");
-        } else {
-            navigate("/login");
-        }
+
+        navigate("/");
     };
 
     return (

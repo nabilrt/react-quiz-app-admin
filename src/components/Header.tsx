@@ -6,23 +6,6 @@ const Header = () => {
             <Link to={"/"}>
                 <p className="font-bold text-xl tracking-wider">Quizzy</p>
             </Link>
-
-            <div className="ml-auto flex gap-2">
-                <>
-                    <Link
-                        to={"/login"}
-                        className="font-semibold tracking-wider hover:backdrop-blur-md"
-                    >
-                        Login
-                    </Link>
-                    <Link
-                        to={"/register"}
-                        className="font-semibold tracking-wider"
-                    >
-                        Register
-                    </Link>
-                </>
-            </div>
         </div>
     );
 };

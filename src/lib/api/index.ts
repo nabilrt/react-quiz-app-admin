@@ -9,18 +9,9 @@ export const loginUser = async (data: { email: string; password: string }) => {
     }
 };
 
-export const registerUser = async (data: FormData) => {
-    try {
-        const response = await axios.post("/user/add", data);
-        return response;
-    } catch (error: any) {
-        throw new Error(error.message);
-    }
-};
-
 export const userDetails = async () => {
     try {
-        const response = await axios.get("/user/me");
+        const response = await axios.get("/user/admin");
         return response;
     } catch (error: any) {
         throw new Error(error.message);
@@ -29,7 +20,7 @@ export const userDetails = async () => {
 
 export const uploadAvatarForUser = async (data: any) => {
     try {
-        const response = await axios.post("/user/upload", data);
+        const response = await axios.post("/user/admin/upload", data);
         return response;
     } catch (error: any) {
         throw new Error(error.message);
@@ -38,7 +29,7 @@ export const uploadAvatarForUser = async (data: any) => {
 
 export const updateUser = async (data: any) => {
     try {
-        const response = await axios.post("/user/update", data);
+        const response = await axios.post("/user/admin/update", data);
         return response;
     } catch (error: any) {
         throw new Error(error.message);
@@ -47,7 +38,7 @@ export const updateUser = async (data: any) => {
 
 export const updateUserPassword = async (data: any) => {
     try {
-        const response = await axios.post("/user/update-password", data);
+        const response = await axios.post("/user/admin/update-password", data);
         return response;
     } catch (error: any) {
         throw new Error(error.message);
@@ -72,18 +63,26 @@ export const getQuizByTopic = async (topic: any) => {
     }
 };
 
-export const storeQuizRecord = async (record: any) => {
+export const getAdminAnalytics = async () => {
     try {
-        const response = await axios.post("/quiz-record/add", record);
+        const response = await axios.get(`/quiz-record/admin/analytics`);
         return response;
     } catch (error: any) {
         throw new Error(error.message);
     }
 };
 
-export const getUserAnalytics = async () => {
+export const createQuiz = async (data: any) => {
     try {
-        const response = await axios.get(`/quiz-record/analytics`);
+        const response = await axios.post(`/quiz/add`, data);
+        return response;
+    } catch (error: any) {
+        throw new Error(error.message);
+    }
+};
+export const updateQuiz = async (id: string | undefined, data: any) => {
+    try {
+        const response = await axios.post(`/quiz/update/${id}`, data);
         return response;
     } catch (error: any) {
         throw new Error(error.message);

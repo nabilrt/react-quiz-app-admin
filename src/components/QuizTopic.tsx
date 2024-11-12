@@ -1,16 +1,30 @@
 import { Link } from "react-router-dom";
 import { BsArrowRight } from "react-icons/bs";
+import { TiEdit } from "react-icons/ti";
 import { Quiz } from "../data/types";
+
 interface QuizCardProps {
     quiz: Quiz;
+    onEdit: (quiz: Quiz) => void; // Pass the quiz data to open modal in edit mode
 }
-const QuizTopic: React.FC<QuizCardProps> = ({ quiz }) => {
+
+const QuizTopic: React.FC<QuizCardProps> = ({ quiz, onEdit }) => {
     return (
         <div className="relative bg-white shadow-md rounded-xl">
+            {/* Edit icon at the top-right corner */}
+            <div className="absolute top-2 right-2">
+                <button
+                    className="p-1 text-gray-500 hover:text-gray-700 hover:bg-gray-200 rounded-full"
+                    onClick={() => onEdit(quiz)} // Pass quiz data to the parent component
+                >
+                    <TiEdit className="text-[1.2rem]" />
+                </button>
+            </div>
+
             <img
                 src={quiz.logo}
                 alt={`${quiz.topic} logo`}
-                className="w-full h-[260px] object-contain rounded-t-xl"
+                className="w-full h-[100px] object-contain rounded-t-xl"
             />
             <div className="p-4">
                 <h1 className="text-[1.3rem] font-bold leading-[34px]">

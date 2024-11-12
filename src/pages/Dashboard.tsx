@@ -1,28 +1,23 @@
 import { useEffect, useState } from "react";
-import { getUserAnalytics } from "../lib/api";
+import { getAdminAnalytics } from "../lib/api";
 import { Bar, Pie } from "react-chartjs-2";
 import {
     Chart as ChartJS,
     CategoryScale,
     LinearScale,
     BarElement,
-    LineElement,
-    PointElement,
     ArcElement,
     Title,
     Tooltip,
     Legend,
 } from "chart.js";
-
-import { FaStar, FaListUl, FaCheckCircle } from "react-icons/fa";
+import { FaStar, FaListUl, FaCheckCircle, FaUser } from "react-icons/fa";
 
 // Register the necessary components
 ChartJS.register(
     CategoryScale,
     LinearScale,
     BarElement,
-    LineElement,
-    PointElement,
     ArcElement,
     Title,
     Tooltip,
@@ -42,17 +37,11 @@ interface ScoreDistributionItem {
     averageScore: string;
 }
 
-interface AccuracyOverTimeItem {
-    date: string;
-    accuracy: string;
-    topic: string;
-    category: string;
-}
-
 interface AttemptsPerCategoryItem {
     topic: string;
     category: string;
     attempts: number;
+    correct: number;
 }
 
 interface AttemptsPerTopicItem {
@@ -60,24 +49,16 @@ interface AttemptsPerTopicItem {
     attempts: number;
 }
 
-interface CorrectIncorrectItem {
-    topic: string;
-    category: string;
-    correct: number;
-    incorrect: number;
-}
-
 interface Top5Data {
     topAverageScoreTopics: ScoreDistributionItem[];
     topMostAttemptedCategories: AttemptsPerCategoryItem[];
-    topCategoriesByCorrectAnswers: CorrectIncorrectItem[];
+    topCategoriesByCorrectAnswers: AttemptsPerCategoryItem[];
+    topUsersByPerformance: { userName: string; avgScore: string }[];
 }
 
 interface ChartData {
     scoreDistribution: ScoreDistributionItem[];
-    accuracyOverTime: AccuracyOverTimeItem[];
     attemptsPerCategory: AttemptsPerCategoryItem[];
-    correctIncorrectChartData: CorrectIncorrectItem[];
     attemptsPerTopic: AttemptsPerTopicItem[];
 }
 
@@ -92,12 +73,12 @@ const UserDashboard: React.FC = () => {
     const [chartData, setChartData] = useState<ChartData | null>(null);
     const [top5Data, setTop5Data] = useState<Top5Data | null>(null);
     const [activeTab, setActiveTab] = useState<
-        "score" | "attempts" | "correct"
+        "score" | "attempts" | "correct" | "users"
     >("score");
 
     const getQuizAnalytics = async () => {
         try {
-            const response = await getUserAnalytics();
+            const response = await getAdminAnalytics();
             const data: AnalyticsResponse = response.data;
             setSingleValues(data.singleValues);
             setChartData(data.chartData);
@@ -120,7 +101,7 @@ const UserDashboard: React.FC = () => {
                 data: chartData?.scoreDistribution.map((item) =>
                     parseFloat(item.averageScore)
                 ),
-                backgroundColor: "rgba(75, 192, 192, 0.6)", // Customize color as needed
+                backgroundColor: "rgba(75, 192, 192, 0.6)",
                 borderColor: "rgba(75, 192, 192, 1)",
                 borderWidth: 1,
             },
@@ -145,7 +126,6 @@ const UserDashboard: React.FC = () => {
         ],
     };
 
-    // Generate distinct colors for each category in attempts per category chart
     const categoryColors = chartData?.attemptsPerCategory.map(
         (_, index) =>
             `hsl(${
@@ -229,6 +209,23 @@ const UserDashboard: React.FC = () => {
                         )}
                     </div>
                 );
+            case "users":
+                return (
+                    <div className={containerStyle}>
+                        {top5Data?.topUsersByPerformance.map((user, index) => (
+                            <div key={index} className={contentStyle}>
+                                <FaUser className={iconStyle} />
+                                <span className={labelStyle}>
+                                    {user.userName}
+                                </span>
+                                <span className={valueStyle}>
+                                    {user.avgScore}
+                                </span>
+                            </div>
+                        ))}
+                    </div>
+                );
+
             default:
                 return null;
         }
@@ -255,7 +252,9 @@ const UserDashboard: React.FC = () => {
                             <p>{singleValues?.overallAccuracy}%</p>
                         </div>
                         <div className="p-4 bg-gray-100 rounded shadow">
-                            <h3 className="font-bold mb-1">Most Attempted Category</h3>
+                            <h3 className="font-bold mb-1">
+                                Most Attempted Category
+                            </h3>
                             <p>{singleValues?.mostAttemptedCategory}</p>
                         </div>
                     </div>
@@ -266,37 +265,29 @@ const UserDashboard: React.FC = () => {
                             </h3>
                             <Pie
                                 data={attemptsPerCategoryData}
-                                options={{
-                                    responsive: false,
-                                }}
+                                options={{ responsive: false }}
                                 height={300}
                                 width={400}
                             />
                         </div>
-
                         <div className="mb-8">
                             <h3 className="text-lg font-semibold mb-2">
                                 Attempts Per Topic
                             </h3>
                             <Pie
                                 data={attemptsPerTopicData}
-                                options={{
-                                    responsive: false,
-                                }}
+                                options={{ responsive: false }}
                                 height={300}
                                 width={400}
                             />
                         </div>
-
                         <div className="mb-8">
                             <h3 className="text-lg font-semibold mb-2">
                                 Average Score Distribution
                             </h3>
                             <Bar
                                 data={scoreDistributionData}
-                                options={{
-                                    responsive: false,
-                                }}
+                                options={{ responsive: false }}
                                 height={250}
                                 width={400}
                             />
@@ -335,6 +326,16 @@ const UserDashboard: React.FC = () => {
                                     }`}
                                 >
                                     Top Categories by Correct Answers
+                                </button>
+                                <button
+                                    onClick={() => setActiveTab("users")}
+                                    className={`px-4 py-2 ${
+                                        activeTab === "users"
+                                            ? "bg-blue-500 text-white"
+                                            : "bg-gray-200"
+                                    }`}
+                                >
+                                    Top Users
                                 </button>
                             </div>
                             <div className="bg-gray-100 p-4 rounded shadow">
