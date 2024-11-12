@@ -10,14 +10,16 @@ export type Question = {
 };
 
 export type Category = {
+    _id: string;
     category: string;
     info: string;
     questions: Question[];
 };
 
-export type Quiz = {
+export interface Quiz {
+    _id: string;
     topic: string;
     info: string;
     logo: string;
     categories: Category[];
-};
+}

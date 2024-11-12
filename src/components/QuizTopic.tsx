@@ -19,7 +19,7 @@ const QuizTopic: React.FC<QuizCardProps> = ({ quiz }) => {
                 <p className="text-[0.9rem] text-gray-400">{quiz.info}</p>
             </div>
             <Link
-                to={`/quiz/${quiz.topic}`}
+                to={`/user/quiz/${quiz.topic}`}
                 className="float-right p-2 hover:bg-gray-100 cursor-pointer mr-2 mb-2 rounded-full group"
             >
                 <BsArrowRight className="text-[1.5rem] text-gray-400" />

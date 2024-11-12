@@ -3,12 +3,13 @@ import { useParams } from "react-router-dom";
 import { quiz_data } from "../data/data"; // Assume quiz_data is typed as Quiz[]
 import { Quiz, Category } from "../data/types"; // Import types if placed in a separate file
 import OptionCard from "../components/OptionCard";
-import QuizHeader from "../components/QuizHeader";
 import QuizCategorySelection from "../components/QuizCategorySelection";
 import TimerProgress from "../components/TimerProgress";
 import ReturnIcon from "../icons/ReturnIcon";
 import CrossIcon from "../icons/CrossIcon";
 import ScoreSection from "../components/ScoreSection";
+import { getQuizByTopic, storeQuizRecord } from "../lib/api";
+import { useAuth } from "../lib/context/auth-context";
 
 type Params = {
     lang: string;
@@ -16,13 +17,35 @@ type Params = {
 
 const QuizPage: React.FC = () => {
     const { lang } = useParams<Params>();
-    const quiz_categories =
-        quiz_data.quizzes.find((q: Quiz) => q.topic === lang)?.categories || [];
+    const [quizCategories, setQuizCategories] = useState<Category[]>([]);
+    const [quizId, setQuizId] = useState<string | null>("");
+
     const [selectedQuiz, setSelectedQuiz] = useState<Category | null>(null);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
     const [answers, setAnswers] = useState<{ [key: number]: string[] }>({});
     const [isQuizComplete, setIsQuizComplete] = useState<boolean>(false);
     const [timer, setTimer] = useState<number>(15); // Timer for each question
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchQuizCategories = async () => {
+            setLoading(true);
+            setError(null);
+            try {
+                const response = await getQuizByTopic(lang);
+                setQuizCategories(response.data.categories);
+                setQuizId(response.data._id);
+            } catch (err: any) {
+                setError("Failed to load quiz categories. Please try again.");
+                console.error("Error fetching quiz categories:", err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchQuizCategories();
+    }, [lang]);
 
     useEffect(() => {
         let interval: any;
@@ -110,148 +133,149 @@ const QuizPage: React.FC = () => {
         return score;
     };
 
-    // const saveQuizRecord = async () => {
-    //     // Sample data for API call
-    //     const quizRecordData = {
-    //         userId: "user_id_here", // Replace with actual user ID
-    //         quizId: "quiz_id_here", // Replace with actual quiz ID
-    //         score: calculateScore(),
-    //         totalQuestions: selectedQuiz!.questions.length,
-    //         correctAnswers: calculateCorrectAnswers(),
-    //         incorrectAnswers:
-    //             selectedQuiz!.questions.length - calculateCorrectAnswers(),
-    //         categories: selectedQuiz!.questions.map((question, index) => ({
-    //             questionId: question._id,
-    //             selectedOptions: answers[index] || [],
-    //             isCorrect:
-    //                 answers[index] &&
-    //                 question.answer.every((ans) =>
-    //                     answers[index].includes(ans)
-    //                 ) &&
-    //                 answers[index].length === question.answer.length,
-    //             timeSpent: 15, // replace with actual time spent per question if tracked
-    //         })),
-    //     };
+    const calculateCorrectAnswers = (): number => {
+        let correct = 0;
+        if (selectedQuiz) {
+            selectedQuiz.questions.forEach((question, index) => {
+                if (
+                    answers[index] &&
+                    question.answer.every((ans) =>
+                        answers[index].includes(ans)
+                    ) &&
+                    answers[index].length === question.answer.length
+                ) {
+                    correct++;
+                }
+            });
+        }
+        return correct;
+    };
 
-    //     try {
-    //         const response = await axios.post(
-    //             "/api/quiz-record",
-    //             quizRecordData
-    //         );
-    //         console.log("Quiz record saved:", response.data);
-    //     } catch (error) {
-    //         console.error("Error saving quiz record:", error);
-    //     }
-    // };
+    const { user } = useAuth();
 
-    // // Helper functions to calculate score, correct answers, and time taken
-    // const calculateCorrectAnswers = (): number => {
-    //     let correct = 0;
-    //     if (selectedQuiz) {
-    //         selectedQuiz.questions.forEach((question, index) => {
-    //             if (
-    //                 answers[index] &&
-    //                 question.answer.every((ans) =>
-    //                     answers[index].includes(ans)
-    //                 ) &&
-    //                 answers[index].length === question.answer.length
-    //             ) {
-    //                 correct++;
-    //             }
-    //         });
-    //     }
-    //     return correct;
-    // };
+    const saveQuizRecord = async () => {
+        if (!selectedQuiz) return;
 
-    // useEffect(() => {
-    //     if (isQuizComplete) {
-    //         saveQuizRecord(); // Call API to save quiz record when quiz is complete
-    //     }
-    // }, [isQuizComplete]);
+        const quizRecordData = {
+            userId: user?._id, // dynamically populate userId
+            quizId: quizId, // dynamically populate quizId
+            categoryId: selectedQuiz._id,
+            categoryName: selectedQuiz.category,
+            score: calculateScore(),
+            totalQuestions: selectedQuiz.questions.length,
+            correctAnswers: calculateCorrectAnswers(),
+            incorrectAnswers:
+                selectedQuiz.questions.length - calculateCorrectAnswers(),
+            attempts: 1,
+            accuracy:
+                (calculateCorrectAnswers() / selectedQuiz.questions.length) *
+                100,
+        };
 
+        try {
+            const response = await storeQuizRecord(quizRecordData);
+            console.log("Quiz record saved:", response.data);
+        } catch (error) {
+            console.error("Error saving quiz record:", error);
+        }
+    };
+
+    useEffect(() => {
+        if (isQuizComplete) {
+            saveQuizRecord();
+        }
+    }, [isQuizComplete]);
+
+    if (loading) {
+        return <div className="text-center py-4">Loading...</div>;
+    }
+
+    if (error) {
+        return <div className="text-center py-4 text-red-500">{error}</div>;
+    }
     return (
-        <div>
-            <QuizHeader lang={lang} />
-
+        <div className="">
             {!selectedQuiz && !isQuizComplete && (
                 <section className="bg-white">
                     <QuizCategorySelection
                         lang={lang}
-                        quizCategories={quiz_categories}
+                        quizCategories={quizCategories}
                         startQuiz={startQuiz}
                     />
                 </section>
             )}
 
             {selectedQuiz && !isQuizComplete && (
-                <section className="bg-white py-8 px-4 mx-auto max-w-screen-2xl">
-                    <button
-                        type="button"
-                        className="text-black hover:bg-slate-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mb-2"
-                        onClick={() => {
-                            setSelectedQuiz(null);
-                            setIsQuizComplete(false);
-                            setTimer(15); // Immediately reset timer to 15
-                        }}
-                    >
-                        <ReturnIcon />
-                    </button>
-                    <div className="mb-8 font-manrope">
-                        <h2 className="text-2xl font-semibold mb-6">
-                            Question {currentQuestionIndex + 1} of{" "}
-                            {selectedQuiz.questions.length}
-                        </h2>
-                        <p className="text-gray-700 mb-4">
-                            {
-                                selectedQuiz.questions[currentQuestionIndex]
-                                    .question
-                            }
-                        </p>
+                <div className="max-w-screen-2xl">
+                    <section className="bg-white py-8 px-4 mx-auto  w-full">
+                        <button
+                            type="button"
+                            className="text-black hover:bg-slate-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mb-2"
+                            onClick={() => {
+                                setSelectedQuiz(null);
+                                setIsQuizComplete(false);
+                                setTimer(15); // Immediately reset timer to 15
+                            }}
+                        >
+                            <ReturnIcon />
+                        </button>
+                        <div className="mb-8 font-manrope">
+                            <h2 className="text-2xl font-semibold mb-6">
+                                Question {currentQuestionIndex + 1} of{" "}
+                                {selectedQuiz.questions.length}
+                            </h2>
+                            <p className="text-gray-700 mb-4">
+                                {
+                                    selectedQuiz.questions[currentQuestionIndex]
+                                        .question
+                                }
+                            </p>
 
-                        {/* Timer Progress Bar */}
-                        <TimerProgress timer={timer} totalTime={15} />
+                            {/* Timer Progress Bar */}
+                            <TimerProgress timer={timer} totalTime={15} />
 
-                        <div className="grid grid-cols-2 gap-2">
-                            {selectedQuiz.questions[
-                                currentQuestionIndex
-                            ].options.map((option, optIndex) => (
-                                <OptionCard
-                                    key={optIndex}
-                                    text={option.answer}
-                                    checked={
-                                        answers[currentQuestionIndex]?.includes(
-                                            option.answer
-                                        ) || false
-                                    }
-                                    onChange={() =>
-                                        handleAnswerChange(
-                                            currentQuestionIndex,
-                                            option.answer
-                                        )
-                                    }
-                                />
-                            ))}
+                            <div className="grid grid-cols-2 gap-2">
+                                {selectedQuiz.questions[
+                                    currentQuestionIndex
+                                ].options.map((option, optIndex) => (
+                                    <OptionCard
+                                        key={optIndex}
+                                        text={option.answer}
+                                        checked={
+                                            answers[
+                                                currentQuestionIndex
+                                            ]?.includes(option.answer) || false
+                                        }
+                                        onChange={() =>
+                                            handleAnswerChange(
+                                                currentQuestionIndex,
+                                                option.answer
+                                            )
+                                        }
+                                    />
+                                ))}
+                            </div>
+                            <div className="mt-6 flex justify-between">
+                                <button
+                                    onClick={prevQuestion}
+                                    disabled={currentQuestionIndex === 0}
+                                    className="text-white bg-blue-500 hover:bg-blue-600 font-medium rounded-lg text-sm px-5 py-2.5 disabled:opacity-50"
+                                >
+                                    Previous
+                                </button>
+                                <button
+                                    onClick={nextQuestion}
+                                    className="text-white bg-blue-500 hover:bg-blue-600 font-medium rounded-lg text-sm px-5 py-2.5"
+                                >
+                                    {currentQuestionIndex ===
+                                    selectedQuiz.questions.length - 1
+                                        ? "Finish"
+                                        : "Next"}
+                                </button>
+                            </div>
                         </div>
-                        <div className="mt-6 flex justify-between">
-                            <button
-                                onClick={prevQuestion}
-                                disabled={currentQuestionIndex === 0}
-                                className="text-white bg-blue-500 hover:bg-blue-600 font-medium rounded-lg text-sm px-5 py-2.5 disabled:opacity-50"
-                            >
-                                Previous
-                            </button>
-                            <button
-                                onClick={nextQuestion}
-                                className="text-white bg-blue-500 hover:bg-blue-600 font-medium rounded-lg text-sm px-5 py-2.5"
-                            >
-                                {currentQuestionIndex ===
-                                selectedQuiz.questions.length - 1
-                                    ? "Finish"
-                                    : "Next"}
-                            </button>
-                        </div>
-                    </div>
-                </section>
+                    </section>
+                </div>
             )}
 
             {isQuizComplete && (

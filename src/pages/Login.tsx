@@ -1,20 +1,37 @@
 import { Link, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
 import loginImage from "../assets/quiz.png";
+import { useAuth } from "../lib/context/auth-context";
+import { useState } from "react";
+import Header from "../components/Header";
+
 const Login = () => {
     let navigate = useNavigate();
+    const [loginError, setLoginError] = useState<string | null>(null);
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm();
+
+    const { userLogin, loginLoader, authenticated } = useAuth();
+
+    const onSubmit = async (data: any) => {
+        setLoginError(null); // Clear previous error
+        const errorMessage = await userLogin(data);
+        if (errorMessage) {
+            setLoginError(errorMessage); // Set error message if login fails
+        }
+    };
+
+    if (authenticated) {
+        navigate("/user/quiz");
+    }
+
     return (
         <div>
-            <div className="font-manrope  shadow-[0px_12px_6px_0px_rgba(0,_0,_0,_0.1)]  w-full mb-4 h-28">
-                <div className=" -mt-8  flex justify-between mx-auto max-w-screen-2xl sm:py-16 lg:px-6 ">
-                    <div>
-                        <p
-                            className="font-semibold text-xl tracking-wider cursor-pointer"
-                            onClick={() => navigate("/")}
-                        >
-                            Quizzy Authentication
-                        </p>
-                    </div>
-                </div>
+            <div className="font-manrope w-full mb-4 ">
+                <Header />
             </div>
             <div className="font-inter flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
                 <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -29,7 +46,10 @@ const Login = () => {
                 </div>
 
                 <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-                    <form action="#" method="POST" className="space-y-6">
+                    <form
+                        onSubmit={handleSubmit(onSubmit)}
+                        className="space-y-6"
+                    >
                         <div>
                             <label
                                 htmlFor="email"
@@ -40,12 +60,17 @@ const Login = () => {
                             <div className="mt-2">
                                 <input
                                     id="email"
-                                    name="email"
                                     type="email"
-                                    required
-                                    autoComplete="email"
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                                    {...register("email", {
+                                        required: "Email is required",
+                                    })}
+                                    className="block w-full rounded-md border-0 py-1.5 px-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
                                 />
+                                {errors.email && (
+                                    <p className="mt-2 text-sm text-red-600">
+                                        {String(errors.email.message)}
+                                    </p>
+                                )}
                             </div>
                         </div>
 
@@ -69,13 +94,32 @@ const Login = () => {
                             <div className="mt-2">
                                 <input
                                     id="password"
-                                    name="password"
                                     type="password"
-                                    required
-                                    autoComplete="current-password"
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                                    {...register("password", {
+                                        required: "Password is required",
+                                    })}
+                                    className="block w-full rounded-md border-0 py-1.5 px-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
                                 />
+                                {errors.password && (
+                                    <p className="mt-2 text-sm text-red-600">
+                                        {String(errors.password.message)}
+                                    </p>
+                                )}
                             </div>
+                        </div>
+                        <div
+                            style={{
+                                textAlign: "center",
+                                fontSize: "14px",
+                                lineHeight: "21px",
+                                fontWeight: "400",
+                                color: "#E03838",
+                                marginTop: "8px",
+                                marginBottom: "8px",
+                                height: "25px",
+                            }}
+                        >
+                            {loginError && <span>{loginError}</span>}
                         </div>
 
                         <div>
@@ -83,7 +127,7 @@ const Login = () => {
                                 type="submit"
                                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                             >
-                                Sign in
+                                {loginLoader ? "Loading..." : "Sign in"}
                             </button>
                         </div>
                     </form>

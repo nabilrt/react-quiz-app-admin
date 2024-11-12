@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { CgProfile } from "react-icons/cg";
 import { useNavigate } from "react-router-dom";
+import Header from "../components/Header";
 
 const Register = () => {
     let navigate = useNavigate();
@@ -23,17 +24,8 @@ const Register = () => {
 
     return (
         <div>
-            <div className="font-manrope  shadow-[0px_12px_6px_0px_rgba(0,_0,_0,_0.1)]  w-full mb-4 h-28">
-                <div className=" -mt-8  flex justify-between mx-auto max-w-screen-2xl sm:py-16 lg:px-6 ">
-                    <div>
-                        <p
-                            className="font-semibold text-xl tracking-wider cursor-pointer"
-                            onClick={() => navigate("/")}
-                        >
-                            Quizzy Authentication
-                        </p>
-                    </div>
-                </div>
+            <div className="font-manrope  shadow-[0px_12px_6px_0px_rgba(0,_0,_0,_0.1)]  w-full mb-4 ">
+                <Header />
             </div>
 
             <div className="font-inter container mx-auto py-8 px-4 sm:px-6 md:px-8">

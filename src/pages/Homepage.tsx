@@ -1,31 +1,13 @@
 import { quiz_data } from "../data/data";
 import HeroSection from "../components/HeroSection";
 import QuizTopic from "../components/QuizTopic";
-import { Link } from "react-router-dom";
+import Header from "../components/Header";
 const HomePage = () => {
     const quiz_topics = quiz_data.quizzes;
     return (
         <div>
-            <div className="font-manrope  shadow-[0px_12px_6px_0px_rgba(0,_0,_0,_0.1)]  w-full mb-4 h-28">
-                <div className=" -mt-8  flex justify-between mx-auto max-w-screen-2xl sm:py-16 lg:px-6 ">
-                    <div>
-                        <p className="font-bold text-xl tracking-wider">
-                            Quizzy
-                        </p>
-                    </div>
-
-                    <div className="ml-auto flex gap-2">
-                        <Link
-                            to={"/login"}
-                            className="font-semibold tracking-wider hover:backdrop-blur-md"
-                        >
-                            Login
-                        </Link>
-                        <Link to={"/register"} className="font-semibold tracking-wider">
-                            Register
-                        </Link>
-                    </div>
-                </div>
+            <div className="font-manrope    w-full mb-4 ">
+            <Header />
             </div>
             <section className="bg-white font-inter">
                 <HeroSection />
