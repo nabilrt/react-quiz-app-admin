@@ -1,6 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import loginImage from "../assets/quiz.png";
 import { useAuth } from "../lib/context/auth-context";
 import { useState } from "react";
 import Header from "../components/Header";

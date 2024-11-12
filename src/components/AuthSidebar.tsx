@@ -1,5 +1,4 @@
 import { Link, useLocation } from "react-router-dom";
-import loginImage from "../assets/quiz.png";
 import { useAuth } from "../lib/context/auth-context";
 
 const AuthSidebar = () => {
