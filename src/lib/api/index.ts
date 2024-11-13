@@ -88,3 +88,25 @@ export const updateQuiz = async (id: string | undefined, data: any) => {
         throw new Error(error.message);
     }
 };
+
+export const updateCategoryToQuiz = async (
+    id: string | undefined,
+    category_id: string | undefined,
+    data: any
+) => {
+    try {
+        const response = await axios.post(`/quiz/${id}/${category_id}`, data);
+        return response;
+    } catch (error: any) {
+        throw new Error(error.message);
+    }
+};
+
+export const addCategoryToQuiz = async (id: string | undefined, data: any) => {
+    try {
+        const response = await axios.post(`/quiz/${id}/category`, data);
+        return response;
+    } catch (error: any) {
+        throw new Error(error.message);
+    }
+};

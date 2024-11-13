@@ -1,30 +1,24 @@
 import React from "react";
-
-type QuizCategory = {
-    category: string;
-    info: string;
-};
+import { Category } from "../data/types";
+import { FiEdit } from "react-icons/fi"; // Import edit icon
 
 type QuizCategoryCardProps = {
-    quiz: QuizCategory;
-    onClick: () => void;
+    quiz: Category;
+    onEdit: () => void; // Edit handler
+    
 };
 
-const QuizCategoryCard: React.FC<QuizCategoryCardProps> = ({
-    quiz,
-    onClick,
-}) => {
+const QuizCategoryCard: React.FC<QuizCategoryCardProps> = ({ quiz, onEdit }) => {
     return (
-        <div
-            onClick={onClick}
-            className="cursor-pointer relative bg-white shadow-md rounded-xl"
-        >
-            <div className="p-4">
-                <h1 className="text-[1.3rem] font-bold leading-[34px]">
-                    {quiz.category}
-                </h1>
-                <p className="text-[0.9rem] text-gray-400">{quiz.info}</p>
-            </div>
+        <div className="relative bg-white shadow-md rounded-xl p-4">
+            <button
+                onClick={onEdit}
+                className="absolute top-2 right-2 bg-gray-100 p-1 rounded-full hover:bg-gray-200"
+            >
+                <FiEdit className="text-gray-600" />
+            </button>
+            <h1 className="text-lg font-bold">{quiz.category}</h1>
+            <p className="text-sm text-gray-500">{quiz.info}</p>
         </div>
     );
 };
