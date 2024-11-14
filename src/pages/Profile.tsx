@@ -27,7 +27,7 @@ const ProfilePage = () => {
     const onSubmit = async (data: any) => {
         try {
             setLoading(true);
-            await updateUser({ name: data.first_name + " " + data.last_name });
+            await updateUser({ name: data.first_name });
             // Fetch updated user details and update the context
             const userData = await userDetails();
             setUser(userData.data.user);

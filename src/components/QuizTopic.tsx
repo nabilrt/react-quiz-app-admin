@@ -10,7 +10,7 @@ interface QuizCardProps {
 
 const QuizTopic: React.FC<QuizCardProps> = ({ quiz, onEdit }) => {
     return (
-        <div className="relative bg-white shadow-md rounded-xl">
+        <div className="relative bg-white shadow-md rounded-xl max-w-xs md:max-w-sm lg:max-w-md xl:max-w-lg 2xl:max-w-xl mx-auto">
             {/* Edit icon at the top-right corner */}
             <div className="absolute top-2 right-2">
                 <button

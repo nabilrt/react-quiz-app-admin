@@ -8,6 +8,7 @@ import ProfilePage from "./pages/Profile";
 import SettingsPage from "./pages/SettingsPage";
 import QuizIndex from "./pages/QuizIndex";
 import UserDashboard from "./pages/Dashboard";
+import QuestionManagement from "./pages/Questions";
 
 function App() {
     return (
@@ -21,6 +22,10 @@ function App() {
                         <Route path="profile" element={<ProfilePage />} />
                         <Route path="settings" element={<SettingsPage />} />
                         <Route path="quiz/:id" element={<QuizPage />} />
+                        <Route
+                            path="quiz/:id/:categoryId"
+                            element={<QuestionManagement />}
+                        />
                     </Route>
                 </Routes>
             </AuthContextProvider>

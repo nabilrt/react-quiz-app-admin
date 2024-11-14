@@ -102,9 +102,55 @@ export const updateCategoryToQuiz = async (
     }
 };
 
+export const updateQuestinsToQuiz = async (
+    id: string | undefined,
+    category_id: string | undefined,
+    data: any
+) => {
+    try {
+        const response = await axios.put(`/quiz/${id}/${category_id}`, data);
+        return response;
+    } catch (error: any) {
+        throw new Error(error.message);
+    }
+};
+
+export const getQuestionsForQuiz = async (
+    id: string | undefined,
+    category_id: string | undefined
+) => {
+    try {
+        const response = await axios.get(`/quiz/${id}/${category_id}`);
+        return response;
+    } catch (error: any) {
+        throw new Error(error.message);
+    }
+};
+
 export const addCategoryToQuiz = async (id: string | undefined, data: any) => {
     try {
         const response = await axios.post(`/quiz/${id}/category`, data);
+        return response;
+    } catch (error: any) {
+        throw new Error(error.message);
+    }
+};
+
+export const deleteQuiz = async (id: string | undefined) => {
+    try {
+        const response = await axios.delete(`/quiz/${id}`);
+        return response;
+    } catch (error: any) {
+        throw new Error(error.message);
+    }
+};
+
+export const deleteQuizCategory = async (
+    id: string | undefined,
+    category_id: string | undefined
+) => {
+    try {
+        const response = await axios.delete(`/quiz/${id}/${category_id}`);
         return response;
     } catch (error: any) {
         throw new Error(error.message);
