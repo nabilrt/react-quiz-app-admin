@@ -9,6 +9,8 @@ import SettingsPage from "./pages/SettingsPage";
 import QuizIndex from "./pages/QuizIndex";
 import UserDashboard from "./pages/Dashboard";
 import QuestionManagement from "./pages/Questions";
+import NotFoundPage from "./pages/NotFoundPage";
+import IssuesPage from "./pages/Issues";
 
 function App() {
     return (
@@ -21,12 +23,15 @@ function App() {
                         <Route path="quiz" element={<QuizIndex />} />
                         <Route path="profile" element={<ProfilePage />} />
                         <Route path="settings" element={<SettingsPage />} />
+                        <Route path="issues" element={<IssuesPage />} />
                         <Route path="quiz/:id" element={<QuizPage />} />
                         <Route
                             path="quiz/:id/:categoryId"
                             element={<QuestionManagement />}
                         />
+                        <Route path="*" element={<NotFoundPage />} />
                     </Route>
+                    <Route path="*" element={<NotFoundPage />} />
                 </Routes>
             </AuthContextProvider>
         </>

@@ -156,3 +156,21 @@ export const deleteQuizCategory = async (
         throw new Error(error.message);
     }
 };
+
+export const showAllIssues = async () => {
+    try {
+        const response = await axios.get(`/issue/all`);
+        return response;
+    } catch (error: any) {
+        throw new Error(error.message);
+    }
+};
+
+export const updateIssueStatus = async (id: string | undefined, data: any) => {
+    try {
+        const response = await axios.put(`/issue/${id}`, data);
+        return response;
+    } catch (error: any) {
+        throw new Error(error.message);
+    }
+};

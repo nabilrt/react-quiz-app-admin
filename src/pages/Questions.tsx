@@ -12,6 +12,8 @@ import { RiDeleteBin5Line } from "react-icons/ri";
 import ReturnIcon from "../icons/ReturnIcon";
 import { IoAddCircleOutline } from "react-icons/io5";
 import { FaCheck } from "react-icons/fa6";
+import AlertMessage from "../components/Questions/AlertMessage";
+import OptionsFieldArray from "../components/Questions/OptionFieldsArray";
 
 type Option = {
     answer: string;
@@ -122,7 +124,7 @@ const QuestionManagement: React.FC = () => {
         questions.every(
             (q) =>
                 q.question.trim() !== "" &&
-                q.options.length >= 2 &&
+                q.options.length >= 4 &&
                 q.options.length <= 8 &&
                 q.options.every((opt) => opt.answer.trim() !== "") &&
                 q.answer.length > 0
@@ -142,16 +144,10 @@ const QuestionManagement: React.FC = () => {
                         >
                             <ReturnIcon />
                         </button>
-                        {successMessage && (
-                            <p className="text-emerald-500 font-lexend">
-                                Quiz Saved Successfully!
-                            </p>
-                        )}
-                        {errorMessage && (
-                            <p className="text-red-500 font-lexend">
-                                An Error Occurred. Try Again!
-                            </p>
-                        )}
+                        <AlertMessage
+                            successMessage={successMessage}
+                            errorMessage={errorMessage}
+                        />
                         <div className="ml-auto flex gap-2">
                             <button
                                 type="button"
@@ -213,8 +209,6 @@ const QuestionManagement: React.FC = () => {
                                             />
                                         )}
                                     />
-
-                                    {/* Define a separate useFieldArray for options inside the loop */}
                                     <OptionsFieldArray
                                         control={control}
                                         questionIndex={questionIndex}
@@ -283,61 +277,5 @@ const QuestionManagement: React.FC = () => {
     );
 };
 
-// Separate component for options field array to avoid hook issues
-const OptionsFieldArray: React.FC<{
-    control: any;
-    questionIndex: number;
-    options: Option[];
-}> = ({ control, questionIndex }) => {
-    const {
-        fields: optionFields,
-        append: appendOption,
-        remove: removeOption,
-    } = useFieldArray({
-        control,
-        name: `questions.${questionIndex}.options`,
-    });
-
-    return (
-        <div className="space-y-2">
-            {optionFields.map((optionField, optionIndex) => (
-                <div key={optionField.id} className="flex items-center gap-2">
-                    <Controller
-                        name={`questions.${questionIndex}.options.${optionIndex}.answer`}
-                        control={control}
-                        render={({ field }) => (
-                            <input
-                                {...field}
-                                type="text"
-                                placeholder={`Option ${optionIndex + 1}`}
-                                className="border-[#e5eaf2] border rounded-md outline-none px-4 w-full mt-1 py-3 focus:border-[#3B9DF8] transition-colors duration-300"
-                                required
-                            />
-                        )}
-                    />
-                    {optionFields.length > 2 && (
-                        <button
-                            type="button"
-                            onClick={() => removeOption(optionIndex)}
-                            className="text-red-500"
-                        >
-                            <RiDeleteBin5Line />
-                        </button>
-                    )}
-                </div>
-            ))}
-            {optionFields.length < 8 && (
-                <button
-                    type="button"
-                    onClick={() => appendOption({ answer: "" })}
-                    className="flex items-center gap-1 text-green-500 mt-2"
-                >
-                    <IoAddCircleOutline />
-                    <span>Add Option</span>
-                </button>
-            )}
-        </div>
-    );
-};
 
 export default QuestionManagement;
