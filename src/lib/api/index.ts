@@ -174,3 +174,21 @@ export const updateIssueStatus = async (id: string | undefined, data: any) => {
         throw new Error(error.message);
     }
 };
+
+export const getAllTestimonials = async () => {
+    try {
+        const response = await axios.get(`/testimonial/all`);
+        return response;
+    } catch (error: any) {
+        throw new Error(error.message);
+    }
+};
+
+export const updateTestimonialStatus = async (t_id: string | undefined) => {
+    try {
+        const response = await axios.put(`/testimonial/${t_id}`);
+        return response;
+    } catch (error: any) {
+        throw new Error(error.message);
+    }
+};

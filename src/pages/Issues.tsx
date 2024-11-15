@@ -117,7 +117,9 @@ const IssuesPage: React.FC = () => {
 
     return (
         <div className="issues-page">
-            <h1 className="text-[1.5rem] font-semibold font-lexend">Reported Issues By Users</h1>
+            <h1 className="text-[1.5rem] font-semibold font-lexend">
+                Reported Issues By Users
+            </h1>
             <div className="mt-4">
                 <ul>
                     <div className="flex flex-col">

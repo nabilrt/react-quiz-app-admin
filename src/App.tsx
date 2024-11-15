@@ -11,6 +11,7 @@ import UserDashboard from "./pages/Dashboard";
 import QuestionManagement from "./pages/Questions";
 import NotFoundPage from "./pages/NotFoundPage";
 import IssuesPage from "./pages/Issues";
+import Testimonial from "./pages/Testimonial";
 
 function App() {
     return (
@@ -24,6 +25,7 @@ function App() {
                         <Route path="profile" element={<ProfilePage />} />
                         <Route path="settings" element={<SettingsPage />} />
                         <Route path="issues" element={<IssuesPage />} />
+                        <Route path="testimonial" element={<Testimonial />} />
                         <Route path="quiz/:id" element={<QuizPage />} />
                         <Route
                             path="quiz/:id/:categoryId"

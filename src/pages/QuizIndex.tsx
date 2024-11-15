@@ -25,8 +25,13 @@ const QuizIndex: React.FC = () => {
     const [imageLink, setImageLink] = useState("");
     const [deleteLoading, setDeleteLoading] = useState(false);
 
-
-    const { register, handleSubmit, setValue, reset } = useForm<FormValues>();
+    const {
+        register,
+        handleSubmit,
+        setValue,
+        reset,
+        formState: { errors },
+    } = useForm<FormValues>();
     const [loading, setLoading] = useState(false);
     const [apiLoading, setApiLoading] = useState(false);
 
@@ -108,14 +113,14 @@ const QuizIndex: React.FC = () => {
     };
 
     const quizDelete = async () => {
-        setDeleteLoading(true)
+        setDeleteLoading(true);
         try {
             await deleteQuiz(currentQuiz?._id);
             setQuizTopics(quizTopics.filter((q) => q._id !== currentQuiz?._id));
-            setDeleteLoading(false)
+            setDeleteLoading(false);
             closeModal();
         } catch (error) {
-            setDeleteLoading(false)
+            setDeleteLoading(false);
             console.error(error);
         }
     };
@@ -172,7 +177,9 @@ const QuizIndex: React.FC = () => {
                                         id="fourthImage"
                                         accept="image/*"
                                         className="hidden"
-                                        {...register("image")}
+                                        {...register("image", {
+                                            required: true,
+                                        })}
                                         onChange={(e) => {
                                             handleFileChange(e); // Custom handler for file change
                                         }}
@@ -194,6 +201,11 @@ const QuizIndex: React.FC = () => {
                                     >
                                         Upload logo
                                     </button>
+                                    {errors.image && (
+                                        <span className="text-red-500 text-sm">
+                                            {errors.image.message}
+                                        </span>
+                                    )}
                                 </div>
 
                                 {/* Topic */}
@@ -202,9 +214,21 @@ const QuizIndex: React.FC = () => {
                                     type="text"
                                     id="topic"
                                     placeholder="Quiz Topic"
-                                    {...register("topic", { required: true })}
+                                    {...register("topic", {
+                                        required: true,
+                                        pattern: {
+                                            value: /^[A-Za-z\s]+$/,
+                                            message:
+                                                "Topic can only contain letters and spaces",
+                                        },
+                                    })}
                                     className="border-[#e5eaf2] border rounded-md outline-none px-4 w-full mt-1 py-3 focus:border-[#3B9DF8] transition-colors duration-300"
                                 />
+                                {errors.topic && (
+                                    <span className="text-red-500 text-sm">
+                                        {errors.topic.message}
+                                    </span>
+                                )}
 
                                 {/* Description */}
                                 <label htmlFor="description">Description</label>
@@ -216,6 +240,11 @@ const QuizIndex: React.FC = () => {
                                     })}
                                     className="border-[#e5eaf2] border rounded-md outline-none mt-1 px-4 w-full py-3 min-h-[200px] focus:border-[#3B9DF8] transition-colors duration-300"
                                 ></textarea>
+                                {errors.description && (
+                                    <span className="text-red-500 text-sm">
+                                        {errors.description.message}
+                                    </span>
+                                )}
 
                                 <div className="flex gap-2">
                                     <button
@@ -236,7 +265,9 @@ const QuizIndex: React.FC = () => {
                                             className="py-2 px-4 w-full bg-red-400 hover:bg-red-600 text-[#fff] rounded-md"
                                             onClick={quizDelete}
                                         >
-                                            {deleteLoading ? "Deleting..." : "Delete"}
+                                            {deleteLoading
+                                                ? "Deleting..."
+                                                : "Delete"}
                                         </button>
                                     )}
                                 </div>
