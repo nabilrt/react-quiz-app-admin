@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../lib/context/auth-context";
 import { useState } from "react";
@@ -24,7 +24,7 @@ const Login = () => {
     };
 
     if (authenticated) {
-        navigate("/user/quiz");
+        navigate("/admin/dasboard");
     }
 
     return (
@@ -34,7 +34,9 @@ const Login = () => {
             </div>
             <div className="font-inter flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
                 <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-                    <p className="text-center text-xl font-semibold">QUIZZY ADMIN</p>
+                    <p className="text-center text-xl font-semibold">
+                        QUIZZY ADMIN
+                    </p>
                     <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
                         Sign in to your account
                     </h2>
@@ -126,16 +128,6 @@ const Login = () => {
                             </button>
                         </div>
                     </form>
-
-                    <p className="mt-10 text-center text-sm/6 text-gray-500">
-                        Not a member?{" "}
-                        <Link
-                            to="/register"
-                            className="font-semibold text-indigo-600 hover:text-indigo-500"
-                        >
-                            Create an account
-                        </Link>
-                    </p>
                 </div>
             </div>
         </div>
