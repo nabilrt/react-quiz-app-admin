@@ -29,7 +29,13 @@ const QuizPage: React.FC = () => {
     );
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
-    const { register, handleSubmit, setValue, reset } = useForm<FormValues>();
+    const {
+        register,
+        handleSubmit,
+        setValue,
+        reset,
+        formState: { errors },
+    } = useForm<FormValues>();
     const [loading, setLoading] = useState(false);
     const [apiLoading, setApiLoading] = useState(false);
     const [deleteLoading, setDeleteLoading] = useState(false);
@@ -166,10 +172,20 @@ const QuizPage: React.FC = () => {
                                             id="category"
                                             {...register("category", {
                                                 required: true,
+                                                pattern: {
+                                                    value: /^[A-Za-z\s]+$/,
+                                                    message:
+                                                        "Topic can only contain letters and spaces",
+                                                },
                                             })}
                                             className="border-[#e5eaf2] border rounded-md outline-none px-4 w-full mt-1 py-3 focus:border-[#3B9DF8] transition-colors duration-300"
                                             placeholder="Enter category name"
                                         />
+                                        {errors.category && (
+                                            <span className="text-red-500 text-sm">
+                                                {errors.category.message}
+                                            </span>
+                                        )}
                                     </div>
 
                                     <label
@@ -187,6 +203,11 @@ const QuizPage: React.FC = () => {
                                         className="border-[#e5eaf2] border rounded-md outline-none mt-1 px-4 w-full py-3 min-h-[200px] focus:border-[#3B9DF8] transition-colors duration-300"
                                         placeholder="Enter category info"
                                     ></textarea>
+                                    {errors.info && (
+                                        <span className="text-red-500 text-sm">
+                                            {errors.info.message}
+                                        </span>
+                                    )}
                                     <div className="flex gap-2">
                                         <button
                                             type="submit"
