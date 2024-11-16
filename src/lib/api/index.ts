@@ -192,3 +192,12 @@ export const updateTestimonialStatus = async (t_id: string | undefined) => {
         throw new Error(error.message);
     }
 };
+
+export const clearCommunityChat = async () => {
+    try {
+        const response = await axios.delete(`/chat/clear-messages`);
+        return response;
+    } catch (error: any) {
+        throw new Error(error.message);
+    }
+};

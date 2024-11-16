@@ -1,6 +1,8 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useState } from "react";
-import { updateUserPassword } from "../lib/api/index";
+import { clearCommunityChat, updateUserPassword } from "../lib/api/index";
+import { IoCheckmarkDoneCircleOutline } from "react-icons/io5";
+import { MdErrorOutline } from "react-icons/md";
 
 interface FormValues {
     new_password: string;
@@ -17,6 +19,9 @@ const SettingsPage: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
+    const [clearLoading, setClearLoading] = useState<boolean>(false);
+    const [clearError, setClearError] = useState<string | null>(null);
+    const [clearSuccess, setClearSuccess] = useState<string | null>(null);
 
     const onSubmit: SubmitHandler<FormValues> = async (data) => {
         setError(null); // Clear previous errors
@@ -41,6 +46,24 @@ const SettingsPage: React.FC = () => {
             setError("Failed to update password. Please try again.");
         } finally {
             setLoading(false); // Stop loading
+        }
+    };
+
+    const handleClearChat = async () => {
+        setClearError(null); // Clear previous errors
+        setClearLoading(true); // Start loading
+
+        try {
+            // Call the API to clear the chat
+            await clearCommunityChat();
+            setClearSuccess("Community chat cleared successfully!");
+            setTimeout(() => {
+                setClearSuccess(null);
+            }, 2000);
+        } catch (error) {
+            setClearError("Failed to clear community chat. Please try again.");
+        } finally {
+            setClearLoading(false); // Stop loading
         }
     };
 
@@ -124,6 +147,44 @@ const SettingsPage: React.FC = () => {
                                     </button>
                                 </div>
                             </form>
+                        </div>
+                    </div>
+                    <div className="w-full px-6 pb-8 mt-8 sm:max-w-xl sm:rounded-lg">
+                        <h2 className=" text-2xl font-bold sm:text-xl">
+                            Clear Community Chat
+                        </h2>
+                        <small>
+                            Clear the community chats by clicking below. Note
+                            that people might having conversation now. It is
+                            safe to clear it in an ideal time like night.
+                        </small>
+                        <div className="mt-4">
+                            <button
+                                onClick={handleClearChat}
+                                className="px-6 py-2 border border-indigo-700 font-semibold text-sm bg-indigo-700
+                                text-[#ffffff] hover:bg-[#ffffff] hover:text-indigo-700 transition duration-300 rounded-md"
+                                disabled={clearLoading}
+                            >
+                                {clearLoading ? "Clearing..." : "Clear"}
+                            </button>
+                        </div>
+                        <div className="mt-4">
+                            {clearError && (
+                                <div className="p-3 flex items-center gap-3 bg-[#fdeded] rounded">
+                                    <MdErrorOutline className="text-[#d74242] " />
+                                    <p className="text-[#d74242] ">
+                                        {clearError}
+                                    </p>
+                                </div>
+                            )}
+                            {clearSuccess && (
+                                <div className=" p-3 flex items-center gap-3 bg-[#edf7ed] rounded">
+                                    <IoCheckmarkDoneCircleOutline className="text-[#418944] " />
+                                    <p className="text-[#418944] ">
+                                        {clearSuccess}
+                                    </p>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
