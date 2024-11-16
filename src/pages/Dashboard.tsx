@@ -364,7 +364,9 @@ const UserDashboard: React.FC = () => {
                     </div>
                 </main>
             ) : (
-                <NoContent />
+                <NoContent>
+                    <h1>No User Has Attempted Quiz Yet</h1>
+                </NoContent>
             )}
         </div>
     );

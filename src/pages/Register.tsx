@@ -1,10 +1,8 @@
 import { useRef, useState } from "react";
 import { CgProfile } from "react-icons/cg";
-import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 
 const Register = () => {
-    let navigate = useNavigate();
 
     const [imageLink, setImageLink] = useState<string>("");
     const fileRef = useRef<HTMLInputElement | null>(null);

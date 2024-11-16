@@ -177,9 +177,7 @@ const QuizIndex: React.FC = () => {
                                         id="fourthImage"
                                         accept="image/*"
                                         className="hidden"
-                                        {...register("image", {
-                                            required: true,
-                                        })}
+                                        {...register("image")}
                                         onChange={(e) => {
                                             handleFileChange(e); // Custom handler for file change
                                         }}
